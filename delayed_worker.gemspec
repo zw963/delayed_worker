@@ -1,6 +1,3 @@
-#!/usr/bin/env ruby
-# -*- coding: utf-8 -*-
-
 require File.expand_path('../lib/delayed_worker/version', __FILE__)
 
 Gem::Specification.new do |s|
@@ -8,8 +5,8 @@ Gem::Specification.new do |s|
   s.version                     = DelayedWorker::VERSION
   s.date                        = Time.now.strftime('%F')
   s.required_ruby_version       = '>= 1.9.1'
-  s.authors                     = ['Billy.Zheng(zw963)']
-  s.email                       = ['zw963@163.com']
+  s.authors                     = ['Billy.Zheng']
+  s.email                       = ['vil963@gmail.com']
   s.summary                     = ''
   s.description                 = ''
   s.homepage                    = 'http://github.com/zw963/delayed_worker'
@@ -19,6 +16,8 @@ Gem::Specification.new do |s|
   s.files                      -= Dir['images/*.png']
   s.executables                 = `git ls-files -- bin/*`.split("\n").map {|f| File.basename(f) }
 
-  s.add_runtime_dependency 'activerecord'
-  s.add_development_dependency 'ritual', '~>0.4'
+  s.add_runtime_dependency 'activerecord', '> 4.1'
+  s.add_runtime_dependency 'sidekiq', '> 3.5'
+  s.add_runtime_dependency 'method_source', '~> 0.8'
+  s.add_development_dependency 'sqlite3', '> 1.3'
 end

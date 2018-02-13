@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-
-module DelayedWorker
+class DelayedWorker
   VERSION = [0, 0, 1]
 
   class << VERSION

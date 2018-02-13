@@ -1,13 +1,12 @@
-# -*- coding: utf-8 -*-
-
+require 'sidekiq'
 require 'delayed_worker/version'
 
 class DelayedWorker
   include Sidekiq::Worker
-  sidekiq_options backtrace: true, queue: 'promotion'
+  sidekiq_options backtrace: true, queue: 'default'
 
   def perform(ar_id, ar_type, callback, params)
-    logger.info("\033[0;33m开始执行后台任务!\033[0m")
+    logger.info("\033[0;33mdelayed worker is start!\033[0m")
     type = ar_type.constantize
     if type < ActiveRecord::Base
       ar_object = type.find(ar_id)
@@ -15,6 +14,6 @@ class DelayedWorker
     else
       instance_eval(callback, __FILE__, __LINE__)
     end
-    Rails.logger.info("\033[0;33m后台任务执行完成!\033[0m")
+    Rails.logger.info("\033[0;33mdelayed worker is finished!\033[0m")
   end
 end
