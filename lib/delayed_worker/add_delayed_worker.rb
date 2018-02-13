@@ -1,7 +1,14 @@
 require 'method_source'
 
 module DelayedWorkerConcern
-  def add_delayed_worker(job_name: 'Delayed worker', time: Time.now, subject_id: respond_to?(:id) ? id : nil, subject_type: self.class, params: {}, &block)
+  def add_delayed_worker(
+    time: Time.now,
+    job_name: 'Delayed worker',
+    subject_id: respond_to?(:id) ? id : nil,
+    subject_type: self.class,
+    params: {},
+    &block
+  )
     callback = block.source.split("\n")[1..-2].join("\n")
 
     delayed_worker_log "Delayed worker:\033[0;33m #{job_name} \033[0mis adding into queue!"
