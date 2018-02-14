@@ -10,7 +10,7 @@ class TestDelayedWorker < ActiveRecord::Base
 
   def update_column_use_params!
     add_delayed_worker job_name: 'change text value use params', params: {text: 'params text'} do
-      update(text: params['text'])
+      update(text: params[:text])
     end
   end
 end
@@ -18,9 +18,9 @@ end
 class TestDelayedWorkerController < ActionController::Base
   def test_delayed_worker
     id = TestDelayedWorker.last.id
-    add_delayed_worker job_name: 'change text value use params in controller', subject_id: id, params: {'text' => 'text_from_controller_params'} do
+    add_delayed_worker job_name: 'change text value use params in controller', subject_id: id, params: {text: 'text_from_controller_params'} do
       record = TestDelayedWorker.find(subject_id)
-      record.update(text: params['text'])
+      record.update(text: params[:text])
     end
   end
 end
