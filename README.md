@@ -1,4 +1,4 @@
-e# DelayedWorker [![Build Status](https://travis-ci.org/zw963/delayed_worker.svg?branch=master)](https://travis-ci.org/zw963/delayed_worker) [![Gem Version](https://badge.fury.io/rb/delayed_worker.svg)](http://badge.fury.io/rb/delayed_worker)
+# DelayedWorker [![Build Status](https://travis-ci.org/zw963/delayed_worker.svg?branch=master)](https://travis-ci.org/zw963/delayed_worker) [![Gem Version](https://badge.fury.io/rb/delayed_worker.svg)](http://badge.fury.io/rb/delayed_worker)
 
 This gem is intend for write delayed job with easy and clean.
 
@@ -23,7 +23,7 @@ Add to your Gemfile
 
 ### run worker in Rails model.
 
-```
+```rb
 # == Schema Information
 
 # Table name: test_delayed_workers
@@ -33,11 +33,12 @@ Add to your Gemfile
 class TestDelayedWorker < ActiveRecord::Base
   def update_column!
     add_delayed_worker job_name: 'change text value' do
-      # ... do heavy task here in worker asynchronous.
-      # e.g. invoke exteral API or do heavy SQL query
+      # all code in block will be run asynchronous in delayed worker.
+      # do heavy task here, e.g. invoke exteral API or do heavy SQL query
+      # ...
       
-      # when done, we update text column.
-      update(text: 'new_value')
+      update(text: 'new_value') # can use activerecord object method(e.g. update) to update record
+      # Add whatever rails log as you like.
     end
   end
 end
@@ -46,24 +47,22 @@ end
 class TestDelayedWorkerController < ActionController::Base
   def update_column
     record = TestDelayedWorker.find(params[:id])
-    # invoke delayed worker
-    record.update_column!
+    record.update_column! # invoke delayed worker
   end
 end
 ```
 
 ### run worker in controller action
- ```
+ ```rb
 class TestDelayedWorkerController < ActionController::Base
   def update_text_column
     id = params[:id]
-    new_params = {
-      'text' => params[:text]
-    }
-    # we must use `params: new_params` to pass current context variable into block.
+    new_params = {text: params[:text]}
+    
+    # we must use `params: {key1: value1, key2...}` to pass local variable into block.
     add_delayed_worker job_name: 'change text value use params in controller', subject_id: id, params: new_params do
       record = TestDelayedWorker.find(subject_id)
-      record.update(text: params['text'])
+      record.update(text: params[:text]) # get passed in value with: params[:some_key] or params['some_key']
     end
   end
 end
@@ -71,7 +70,7 @@ end
 
 ### Run in a simple class
 
-```
+```rb
 class SimpleDelayedWorker
   include DelayedWorker::Concern
   
@@ -83,6 +82,8 @@ class SimpleDelayedWorker
 end
  ```
  
+ add_delayed_worker method supported parameter is [here](https://github.com/zw963/delayed_worker/blob/master/lib/delayed_worker/concern.rb#L6-L11)
+ 
  __IMPORTANT__ some trap you must to know:
  
  1. Only support `do ...end` block, and `do` must not same line as `end`!
@@ -90,13 +91,14 @@ end
  
 ## Support
 
-CRuby 2.2 2.3 2.4 2.5 is support.
+  CRuby 2.2 2.3 2.4 2.5 is support.
   
 ## Dependency
 
+  [sidekiq](https://github.com/mperham/sidekiq)
+  [method_source](https://github.com/banister/method_source)
 
-
- ## History
+## History
 
   See [CHANGELOG](https://github.com/zw963/delayed_worker/blob/master/CHANGELOG) for details.
 
