@@ -22,6 +22,7 @@ class DelayedWorker
       end
     end
   end
-  ::ActiveRecord::Base.send(:include, Concern)
-  ::ActionController::Base.send(:include, Concern)
+
+  ::ActiveRecord::Base.send(:include, Concern) if defined? ::ActiveRecord::Base
+  ::ActionController::Base.send(:include, Concern) if defined? ::ActionController::Base
 end

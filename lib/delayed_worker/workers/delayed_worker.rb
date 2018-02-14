@@ -6,7 +6,7 @@ class DelayedWorker
 
   def perform(job_name, subject_id, subject_type, callback, params)
     type = Object.const_get(subject_type)
-    if type < ActiveRecord::Base
+    if defined? ::ActiveRecord::Base and type < ::ActiveRecord::Base
       record = type.find(subject_id)
       delayed_worker_log "Delayed worker:\033[0;33m #{job_name} \033[0mis start!"
       record.instance_eval(callback, __FILE__, __LINE__)
