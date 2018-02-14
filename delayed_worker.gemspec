@@ -7,8 +7,8 @@ Gem::Specification.new do |s|
   s.required_ruby_version       = '>= 2.2.2'
   s.authors                     = ['Billy.Zheng']
   s.email                       = ['vil963@gmail.com']
-  s.summary                     = ''
-  s.description                 = ''
+  s.summary                     = 'Run delayed job easy! '
+  s.description                 = 'A easy-use and clean wrapper for sidekiq worker.'
   s.homepage                    = 'http://github.com/zw963/delayed_worker'
   s.license                     = 'MIT'
   s.require_paths               = ['lib']
