@@ -1,4 +1,4 @@
-# DelayedWorker [![Build Status](https://travis-ci.org/zw963/delayed_worker.svg?branch=master)](https://travis-ci.org/zw963/delayed_worker) [![Gem Version](https://badge.fury.io/rb/delayed_worker.svg)](http://badge.fury.io/rb/delayed_worker)
+e# DelayedWorker [![Build Status](https://travis-ci.org/zw963/delayed_worker.svg?branch=master)](https://travis-ci.org/zw963/delayed_worker) [![Gem Version](https://badge.fury.io/rb/delayed_worker.svg)](http://badge.fury.io/rb/delayed_worker)
 
 This gem is intend for write delayed job with easy and clean.
 
@@ -88,16 +88,15 @@ end
  1. Only support `do ...end` block, and `do` must not same line as `end`!
  2. if need use variables defined in add_delayed_worker invoked, only support use `params` named parameter pass in.
  
-  ## Support
+## Support
 
-  * MRI 1.9.3+
-  * Rubinius 2.2+
+CRuby 2.2 2.3 2.4 2.5 is support.
+  
+## Dependency
 
-## Limitations
 
-No known limit.
 
-## History
+ ## History
 
   See [CHANGELOG](https://github.com/zw963/delayed_worker/blob/master/CHANGELOG) for details.
 
