@@ -1,5 +1,5 @@
-require 'delayed_worker/delayed_worker'
-require 'delayed_worker/add_delayed_worker'
+require 'delayed_worker/workers/delayed_worker'
+require 'delayed_worker/concern'
 require 'delayed_worker/version'
 
 def delayed_worker_log(msg)
