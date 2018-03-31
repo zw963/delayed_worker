@@ -6,8 +6,8 @@ class DelayedWorker
 
     def logger
       if @logger.nil?
-        if defined? Rails
-          @logger = ::Logger.new "#{Rails.root}/log/delayed_worker.log", 'weekly'
+        if defined? ::Rails and ::Rails.respond_to?(:root)
+          @logger = ::Logger.new "#{::Rails.root}/log/delayed_worker.log", 'weekly'
         else
           FileUtils.mkdir_p('log')
           @logger ||= ::Logger.new 'log/delayed_worker.log', 'weekly'

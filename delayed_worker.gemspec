@@ -16,10 +16,9 @@ Gem::Specification.new do |s|
   s.files                      -= Dir['images/*.png']
   s.executables                 = `git ls-files -- bin/*`.split("\n").map {|f| File.basename(f) }
 
-  s.add_runtime_dependency 'sidekiq', '> 3.5'
+  s.add_runtime_dependency 'sidekiq', '~> 4.0'
   s.add_runtime_dependency 'method_source', '~> 0.8'
-  s.add_development_dependency 'activerecord', '> 4.1'
   s.add_development_dependency 'rake'
-  s.add_development_dependency 'actionpack', '> 4.1'
   s.add_development_dependency 'sqlite3', '> 1.3'
+  s.add_development_dependency 'appraisal'
 end
