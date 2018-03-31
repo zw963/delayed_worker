@@ -34,7 +34,7 @@ class SimpleDelayedWorker
   end
 
   def test_delayed_worker_run_after_10_seconds
-    add_delayed_worker job_name: 'simple delayed worker', time: 10 do
+    add_delayed_worker job_name: 'simple delayed worker', scheduled_at: 10 do
       $stdout.print 'delayed worker is run after 10 seconds!'
     end
   end
