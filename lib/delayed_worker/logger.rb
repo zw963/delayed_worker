@@ -9,7 +9,7 @@ class DelayedWorker
         if defined? Rails
           @logger = ::Logger.new "#{Rails.root}/log/delayed_worker.log", 'weekly'
         else
-          FileUtils.mkdir('log/')
+          FileUtils.mkdir_p('log')
           @logger ||= ::Logger.new 'log/delayed_worker.log', 'weekly'
         end
         @logger.progname = 'Delayed Worker'
