@@ -21,48 +21,69 @@ Add to your Gemfile
 
 ## Usage
 
-### run worker in Rails model.
+### run worker With ActiveRecord.
 
 ```rb
 # == Schema Information
 
 # Table name: test_delayed_workers
 
-#  text :string(255)
-
-class TestDelayedWorker < ActiveRecord::Base
-  def update_column!
-    add_delayed_worker job_name: 'change text value' do
-      # all code in block will be run asynchronous in delayed worker.
-      # do heavy task here, e.g. invoke exteral API or do heavy SQL query
-      # ...
-      
-      update(text: 'new_value') # can use activerecord object method(e.g. update) to update record
-      # Add whatever rails log as you like.
-    end
-  end
-end
-
+# some_column                   :string(255)
+# delayed_worker_disabled       :boolean          default(TRUE)
+# delayed_worker_scheduled_at   :datetime
 
 class TestDelayedWorkerController < ActionController::Base
   def update_column
     record = TestDelayedWorker.find(params[:id])
-    record.update_column! # invoke delayed worker
+    
+    add_delayed_worker job_name: 'update some_column value' do
+    # all code in block will be run asynchronous in delayed worker.
+    # do heavy task here, e.g. invoke exteral API or do heavy SQL query
+    # ...
+    
+    update(some_column: 'new_value') # can use any activerecord object method here to update record
+    # ...
+    # You can outout log to `log/delayed_worker.log` with following code:
+    # DelayedWorker::Logger.logger.info 'logger something'
+    end
   end
 end
 ```
+If you want to disabled scheduled job before executed, you can add a `delayed_worker_disabled` boolean column to table.
+if this column is `true`, scheduled job will just do noop.
+
+If you want job is execute in some future date, you need add a `delayed_worker_scheduled_at` column into table, and pass in 
+`scheduled_at` named parameter, with a integer(seconds after now) or any time like object which have a `to_time` method. 
+(e.g. Date, Time, DateTime, ActiveSupport::TimeWithZone)
+
+following is a example:
+
+```rb
+class TestDelayedWorkerController < ActionController::Base
+  def update_column
+    record = TestDelayedWorker.find(params[:id], scheduled_at: 3600)
+
+    add_delayed_worker job_name: 'update some_column value' do
+      update(some_column: 'new_value') # can use any activerecord object method here to update record
+    end
+  end
+end
+ ```
+ 
+ If you want to change scheduled date before job executed, just need change column `delayed_worker_scheduled_at` value, and
+ run add_delayed_worker again to add a new job into queue, old job will just do noop, and new job will work.
 
 ### run worker in controller action
  ```rb
 class TestDelayedWorkerController < ActionController::Base
-  def update_text_column
+  def update_column
     id = params[:id]
-    new_params = {text: params[:text]}
+    new_params = {some_column: params[:some_column]}
     
     # we must use `params: {key1: value1, key2...}` to pass local variable into block.
-    add_delayed_worker job_name: 'change text value use params in controller', subject_id: id, params: new_params do
+    add_delayed_worker job_name: 'update some column value use params in controller', subject_id: id, params: new_params do
       record = TestDelayedWorker.find(subject_id)
-      record.update(text: params[:text]) # get passed in value with: params[:some_key] or params['some_key']
+      record.update(some_column: params[:some_column]) # get passed in value with: params[:some_key] or params['some_key']
     end
   end
 end

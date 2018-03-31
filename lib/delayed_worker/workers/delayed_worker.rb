@@ -22,12 +22,12 @@ class DelayedWorker
       logger.info "#{job_name} was start!"
 
       # If is a scheduled job, but time not match, do noop
-      if scheduled_at and record.has_attribute?(:scheduled_at) and record.scheduled_at.to_i != scheduled_at.to_i
+      if scheduled_at and record.has_attribute?(:delayed_worker_scheduled_at) and record.delayed_worker_scheduled_at.to_i != scheduled_at.to_i
         logger.warn "#{job_name} schedule time is not matched, noop ..."
         return
       end
 
-      if scheduled_at and record.has_attribute?(:disabled) and record.disabled
+      if scheduled_at and record.has_attribute?(:delayed_worker_disabled) and record.disabled
         # If is a delayed job, when close this job, do noop
         logger.warn "#{job_name} job is disabled, noop ..."
         return
