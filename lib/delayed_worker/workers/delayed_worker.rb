@@ -19,13 +19,13 @@ class DelayedWorker
 
     if defined? ::ActiveRecord::Base and _type < ::ActiveRecord::Base
       record = _type.find(subject_id)
-      delayed_worker_log "Delayed worker:\033[0;33m #{job_name} \033[0mis start!"
+      logger.info "Delayed worker: #{job_name} is start!"
       record.instance_eval(callback, __FILE__, __LINE__)
     else
-      delayed_worker_log "Delayed worker:\033[0;33m #{job_name} \033[0mis start!"
+      logger.info "Delayed worker: #{job_name} is start!"
       instance_eval(callback, __FILE__, __LINE__)
     end
 
-    delayed_worker_log "Delayed worker:\033[0;33m #{job_name} \033[0mis finished!"
+    logger.info "Delayed worker: #{job_name} is finished!"
   end
 end

@@ -12,13 +12,13 @@ class DelayedWorker
     )
       callback = block.source.split("\n")[1..-2].join("\n")
 
-      delayed_worker_log "Delayed worker:\033[0;33m #{job_name} \033[0mis adding into queue!"
+      Logger.logger.info "Delayed worker: #{job_name} is adding into queue!"
 
       # valid type: Time, DateTime, ActiveSupport::TimeWithZone or 5.minutes (a integer)
       if (time.respond_to?(:to_time) and time.to_time.is_a?(Time)) or time.is_a?(Integer)
         DelayedWorker.perform_in(time, job_name, subject_id, subject_type, callback, params)
       else
-        delayed_worker_log "Delayed worker:\033[0;33m #{job_name} \033[0mtime invalid!"
+        Logger.logger.error "Delayed worker: #{job_name} time invalid!"
       end
     end
   end
