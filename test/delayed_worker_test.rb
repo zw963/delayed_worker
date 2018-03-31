@@ -3,13 +3,13 @@ require 'delayed_worker'
 
 class TestDelayedWorker < ActiveRecord::Base
   def update_column!
-    add_delayed_worker job_name: 'change text value' do
+    add_job_into_delayed_worker job_name: 'change text value' do
       update(text: 'text_after_change')
     end
   end
 
   def update_column_use_params!
-    add_delayed_worker job_name: 'change text value use params', params: {text: 'params text'} do
+    add_job_into_delayed_worker job_name: 'change text value use params', params: {text: 'params text'} do
       update(text: params[:text])
     end
   end
@@ -18,7 +18,7 @@ end
 class TestDelayedWorkerController < ActionController::Base
   def test_delayed_worker
     id = TestDelayedWorker.last.id
-    add_delayed_worker job_name: 'change text value use params in controller', subject_id: id, params: {text: 'text_from_controller_params'} do
+    add_job_into_delayed_worker job_name: 'change text value use params in controller', subject_id: id, params: {text: 'text_from_controller_params'} do
       record = TestDelayedWorker.find(subject_id)
       record.update(text: params[:text])
     end
@@ -28,13 +28,13 @@ end
 class SimpleDelayedWorker
   include DelayedWorker::Concern
   def test_delayed_worker
-    add_delayed_worker job_name: 'simple delayed worker' do
+    add_job_into_delayed_worker job_name: 'simple delayed worker' do
       $stdout.print 'delayed worker is run!'
     end
   end
 
   def test_delayed_worker_run_after_10_seconds
-    add_delayed_worker job_name: 'simple delayed worker', scheduled_at: 10 do
+    add_job_into_delayed_worker job_name: 'simple delayed worker', scheduled_at: 10 do
       $stdout.print 'delayed worker is run after 10 seconds!'
     end
   end

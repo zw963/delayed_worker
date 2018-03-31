@@ -36,7 +36,7 @@ class TestDelayedWorkerController < ActionController::Base
   def update_column
     record = TestDelayedWorker.find(params[:id])
     
-    add_delayed_worker job_name: 'update some_column value' do
+    add_job_into_delayed_worker job_name: 'update some_column value' do
     # all code in block will be run asynchronous in delayed worker.
     # do heavy task here, e.g. invoke exteral API or do heavy SQL query
     # ...
@@ -63,7 +63,7 @@ class TestDelayedWorkerController < ActionController::Base
   def update_column
     record = TestDelayedWorker.find(params[:id], scheduled_at: 3600)
 
-    add_delayed_worker job_name: 'update some_column value' do
+    add_job_into_delayed_worker job_name: 'update some_column value' do
       update(some_column: 'new_value') # can use any activerecord object method here to update record
     end
   end
@@ -71,7 +71,7 @@ end
  ```
  
  If you want to change scheduled date before job executed, just need change column `delayed_worker_scheduled_at` value, and
- run add_delayed_worker again to add a new job into queue, old job will just do noop, and new job will work.
+ run add_job_into_delayed_worker again to add a new job into queue, old job will just do noop, and new job will work.
 
 ### run worker in controller action
  ```rb
@@ -81,7 +81,7 @@ class TestDelayedWorkerController < ActionController::Base
     new_params = {some_column: params[:some_column]}
     
     # we must use `params: {key1: value1, key2...}` to pass local variable into block.
-    add_delayed_worker job_name: 'update some column value use params in controller', subject_id: id, params: new_params do
+    add_job_into_delayed_worker job_name: 'update some column value use params in controller', subject_id: id, params: new_params do
       record = TestDelayedWorker.find(subject_id)
       record.update(some_column: params[:some_column]) # get passed in value with: params[:some_key] or params['some_key']
     end
@@ -96,19 +96,20 @@ class SimpleDelayedWorker
   include DelayedWorker::Concern
   
   def some_method
-    add_delayed_worker job_name: 'simple delayed worker', time: 10 do
+    add_job_into_delayed_worker job_name: 'simple delayed worker', time: 10 do
       print 'run asynchronous after 10 seconds'
     end
   end
 end
  ```
  
- add_delayed_worker method supported parameter is [here](https://github.com/zw963/delayed_worker/blob/master/lib/delayed_worker/concern.rb#L6-L11)
+ add_job_into_delayed_worker method supported parameter is [here](https://github.com/zw963/delayed_worker/blob/master/lib/delayed_worker/concern.rb#L6-L11)
  
  __IMPORTANT__ some trap you must to know:
  
- 1. Only support `do ...end` block, and `do` must not same line as `end`!
- 2. if need use variables defined in add_delayed_worker invoked, only support use `params` named parameter pass in.
+ 1. Only support `do ...end` form block, and `do` must not same line as `end`, curly braces {} block is not supported!
+ 2. External variables defined in `add_job_into_delayed_worker` context must use `params` named parameter pass in.
+ 
  
 ## Support
 

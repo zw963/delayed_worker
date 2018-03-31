@@ -2,7 +2,7 @@ require 'method_source'
 
 class DelayedWorker
   module Concern
-    def add_delayed_worker(
+    def add_job_into_delayed_worker(
       scheduled_at: nil,
       job_name: 'Delayed worker',
       subject_id: respond_to?(:id) ? id : nil,
@@ -24,6 +24,7 @@ class DelayedWorker
         Logger.logger.error "#{job_name} time invalid!"
       end
     end
+    alias add_job_to_delayed_worker add_job_into_delayed_worker
   end
 
   ::ActiveRecord::Base.send(:include, Concern) if defined? ::ActiveRecord::Base
