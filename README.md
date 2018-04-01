@@ -61,7 +61,7 @@ following is a example:
 ```rb
 class TestDelayedWorkerController < ActionController::Base
   def update_column
-    record = TestDelayedWorker.find(params[:id], scheduled_at: 3600)
+  record = TestDelayedWorker.find(params[:id], scheduled_at: 3600)
 
     add_job_into_delayed_worker job_name: 'update some_column value' do
       update(some_column: 'new_value') # can use any activerecord object method here to update record
@@ -103,7 +103,7 @@ class SimpleDelayedWorker
 end
  ```
  
- add_job_into_delayed_worker method supported parameter is [here](https://github.com/zw963/delayed_worker/blob/master/lib/delayed_worker/concern.rb#L6-L11)
+ add_job_into_delayed_worker all supported options is list [here](https://github.com/zw963/delayed_worker/blob/master/lib/delayed_worker/concern.rb#L6-L14)
  
  __IMPORTANT__ some trap you must to know:
  
