@@ -2,7 +2,7 @@ require 'sidekiq'
 
 class DelayedWorker
   include Sidekiq::Worker
-  sidekiq_options backtrace: true, queue: 'default'
+  sidekiq_options backtrace: true, retry: 12
 
   def perform(job_name, subject_id, subject_type, callback, params, scheduled_at)
     _type = Object.const_get(subject_type)
