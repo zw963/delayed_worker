@@ -53,9 +53,9 @@ class DelayedWorkerTest < Minitest::Test
     assert_equal 0, DelayedWorker.jobs.size
     test1.update_column!
     assert_equal 1, DelayedWorker.jobs.size
-    assert_equal 'text_before_change', test1.reload.text
+    assert_equal 'text_before_change', TestDelayedWorker.find(test1.id).text
     DelayedWorker.drain
-    assert_equal 'text_after_change', test1.reload.text
+    assert_equal 'text_after_change', TestDelayedWorker.find(test1.id).text
   end
 
   def test_update_active_record_column_use_params_asynchronous
@@ -65,9 +65,9 @@ class DelayedWorkerTest < Minitest::Test
     assert_equal 0, DelayedWorker.jobs.size
     test1.update_column_use_params!
     assert_equal 1, DelayedWorker.jobs.size
-    assert_equal 'text_before_change', test1.reload.text
+    assert_equal 'text_before_change', TestDelayedWorker.find(test1.id).text
     DelayedWorker.drain
-    assert_equal 'params text', test1.reload.text
+    assert_equal 'params text', TestDelayedWorker.find(test1.id).text
   end
 
   def test_delayed_worker_in_controller_asynchronous
@@ -78,9 +78,9 @@ class DelayedWorkerTest < Minitest::Test
     assert_equal 0, DelayedWorker.jobs.size
     subject.test_delayed_worker
     assert_equal 1, DelayedWorker.jobs.size
-    assert_equal 'text_before_change', test1.reload.text
+    assert_equal 'text_before_change', TestDelayedWorker.find(test1.id).text
     DelayedWorker.drain
-    assert_equal 'text_from_controller_params', test1.reload.text
+    assert_equal 'text_from_controller_params', TestDelayedWorker.find(test1.id).text
   end
 
   def test_simple_delayed_worker_asynchronous
